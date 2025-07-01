@@ -1,73 +1,110 @@
-# Welcome to your Lovable project
+# 🧥 오늘 뭐 입지? - 날씨 기반 옷차림 추천 서비스
 
-## Project info
+---
 
-**URL**: https://lovable.dev/projects/c333c707-4beb-4b1b-9a49-170c03007430
+## 👤 페르소나
 
-## How can I edit this code?
+### 바쁜 직장인 – 김태정 (28세)
 
-There are several ways of editing your application.
+| 항목 | 내용 |
+|------|------|
+| 직업 | IT 회사 프론트엔드 개발자 |
+| 라이프스타일 | 매일 출근, 아침 시간 촉박, 옷 고르기 귀찮음 |
+| 목표 | 날씨에 맞는 옷차림을 빠르게 결정하고 시간을 절약하고 싶음 |
+| 니즈 | 날씨에 따라 본인이 가진 옷 중에서 적절한 코디 추천 |
+| 페인 포인트 | 아침마다 "뭘 입지?" 고민으로 스트레스, 시간 부족 |
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c333c707-4beb-4b1b-9a49-170c03007430) and start prompting.
+## 📌 사용자 시나리오 및 스토리
 
-Changes made via Lovable will be committed automatically to this repo.
+### ☀️ 아침 출근 준비 상황
 
-**Use your preferred IDE**
+#### 상황
+- 김태정은 아침에 일어나 출근 준비 중이다.
+- 오늘 날씨가 흐리고 미세먼지가 심한데 뭘 입어야 할지 고민된다.
+- 본인이 저장해 둔 옷이 많지만, 어떤 조합이 오늘 날씨에 적절한지 생각할 여유가 없다.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+#### 흐름
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. 스마트폰으로 ‘오늘 뭐 입지?’ 앱 실행  
+2. 자동 로그인 → 본인이 저장한 옷장 정보 불러오기  
+3. “오늘 뭐 입지?” 버튼 클릭  
+4. 앱이 현재 위치 날씨 조회 + 개인 옷장 조합 분석  
+5. 3초 이내에 추천 코디 카드 제시 (상의, 하의, 겉옷, 신발)  
+6. 바로 그 코디로 옷을 입고 출근 준비 완료
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 🗣️ 사용자 스토리
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+> “직장인으로서, 저는 아침마다 날씨에 맞는 옷을 고민하느라 시간을 낭비하고 싶지 않습니다.  
+> 제가 가진 옷 중에서 오늘 날씨에 딱 맞는 조합을 빠르게 추천받아, 스트레스 없이 출근 준비를 끝내고 싶습니다.”
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+## ✅ 인수 조건 (Acceptance Criteria)
 
-**Edit a file directly in GitHub**
+- **Given**: 사용자가 로그인 상태로 결정봇(옷 추천 서비스)에 접속했을 때  
+- **When**: “오늘 뭐 입지?” 버튼을 누르거나 자연어 질문을 입력했을 때  
+- **Then**: 3초 이내에 날씨에 적합한 **개인 옷장 기반 옷차림 추천**을 제공한다
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 💡 핵심 가치 제안
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| 가치 | 설명 |
+|------|------|
+| 👚 **즉석 결정 지원** | 아침 옷 고민 시간 단축 → 결정 피로 감소 |
+| 🌦️ **날씨 반영 옷차림** | 체감온도, 강수, 미세먼지, 바람 등 반영 |
+| 🧥 **내 옷 기반 추천** | 유저가 등록한 실제 옷 목록 기반으로 조합 제시 |
+| 🖱️ **직관적 사용성** | “오늘 뭐 입지?” 클릭 한 번이면 바로 추천 |
+| 📆 **일상 밀착형** | 매일 반복되는 소소한 고민을 해결해주는 도우미 역할 |
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🔧 핵심 기능
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+| 기능 | 설명 |
+|------|------|
+| 🧥 옷장 등록 | 사용자가 보유한 옷(상의/하의/겉옷/신발/액세서리)을 앱에 저장 |
+| ☀️ 날씨 데이터 연동 | 현재 위치 기반 기온/체감온도/강수량/바람 정보 수집 (Mock 또는 API) |
+| 🎯 맞춤 코디 추천 | 날씨 + 사용자 옷장 기반 조건 매칭 후 추천 |
+| 🔘 퀵버튼 인터페이스 | "오늘 뭐 입지?" 클릭 한 번으로 추천 진행 |
+| 🧠 목업 응답 처리 | 실제 AI 없이 기온 구간/조건 기반 사전 정의된 코디 제공 |
 
-## How can I deploy this project?
+---
 
-Simply open [Lovable](https://lovable.dev/projects/c333c707-4beb-4b1b-9a49-170c03007430) and click on Share -> Publish.
+## 🧪 구현 범위 (MVP 기준)
 
-## Can I connect a custom domain to my Lovable project?
+| 항목 | 설명 |
+|------|------|
+| 로그인 기능 | 간단한 사용자 구분 (mock id 기반) |
+| 옷장 데이터 | JSON 또는 로컬 스토리지에 사용자 옷 정보 저장 |
+| 추천 로직 | 조건별 추천 룰셋 적용 (예: 10~15도 = 코트 + 니트) |
+| UI 구성 | React 기반 대화형 인터페이스 또는 카드 UI |
+| 날씨 정보 | OpenWeatherMap API 또는 목업 데이터로 대체 |
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🧱 예시 추천 응답 (목업)
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**입력**: 오늘 뭐 입지?  
+**응답**:
+> 서울은 현재 12도, 구름 많고 오후에 비 소식이 있어요.  
+>  
+> 오늘의 코디는 다음과 같아요:  
+> 👕 상의: 회색 니트 (등록 옷장 중 선택)  
+> 👖 하의: 블랙 슬랙스  
+> 🧥 겉옷: 네이비 코트  
+> ☂️ 오후 비 대비, 작은 우산도 챙기세요!
+
+---
+
+## 🔄 확장 방향
+
+- 📸 사용자가 직접 촬영한 옷 이미지 기반 추천
+- 🔄 코디 히스토리 관리 (반복 방지)
+- 🧠 GPT 연동 → "오늘 데이트야. 추운데 멋스럽게 입고 싶어" 같은 고급 질의 처리
+- 👗 스타일 설정 (캐주얼 / 포멀 / 데일리 모드 등)
+
