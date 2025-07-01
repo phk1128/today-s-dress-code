@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Cloud, Sun, CloudRain, Thermometer } from "lucide-react";
+import { Cloud, Sun, CloudRain, Thermometer, Shirt } from "lucide-react";
 import WeatherCard from "../components/WeatherCard";
 import OutfitRecommendation from "../components/OutfitRecommendation";
 import QuickActions from "../components/QuickActions";
