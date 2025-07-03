@@ -240,7 +240,7 @@ export const useWardrobe = () => {
       case 'exercise':
         return `운동하기 편한 캐주얼 룩으로 추천해요. 움직임이 자유로운 핏으로 선택했습니다.`;
       case 'party':
-        return `파티에 어울리는 트렌디한 룩입니다! ${trendScore && trendScore > 80 ? '요즘 인기 많은 ' : ''}스타일이에요.`;
+        return `파티에 어울리는 트렌디한 룩입니다! 요즘 인기 많은 스타일이에요.`;
       default:
         return `일상에 편안한 룩으로 ${favoriteCount > 0 ? '자주 입으시는 ' : ''}아이템들을 활용했어요.`;
     }
