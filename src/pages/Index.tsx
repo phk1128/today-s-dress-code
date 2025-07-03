@@ -8,6 +8,8 @@ import QuickActions from "../components/QuickActions";
 import LoadingSpinner from "../components/LoadingSpinner";
 import LoginForm from "../components/LoginForm";
 import WardrobeManager from "../components/WardrobeManager";
+import SituationSelector from "../components/SituationSelector";
+import TrendingOutfits from "../components/TrendingOutfits";
 import { Button } from "../components/ui/button";
 
 interface WeatherData {
@@ -31,12 +33,14 @@ interface OutfitData {
 
 const Index = () => {
   const { user, logout } = useAuth();
-  const { wardrobe } = useWardrobe();
+  const { wardrobe, getRecommendationBySituation, addCodiHistory } = useWardrobe();
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
   const [outfitData, setOutfitData] = useState<OutfitData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showRecommendation, setShowRecommendation] = useState(false);
   const [showWardrobe, setShowWardrobe] = useState(false);
+  const [showSituationSelector, setShowSituationSelector] = useState(false);
+  const [showTrending, setShowTrending] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState("서울");
 
   // 지역별 날씨 데이터 - 실제로는 OpenWeatherMap API를 사용
@@ -227,6 +231,36 @@ const Index = () => {
     }, 1200);
   };
 
+  const handleSituationRecommendation = async (situation: string) => {
+    setIsLoading(true);
+    setShowSituationSelector(false);
+    
+    setTimeout(() => {
+      const currentWeather = mockWeatherByLocation[selectedLocation];
+      setWeatherData(currentWeather);
+      
+      const recommendation = getRecommendationBySituation(situation as any, currentWeather);
+      
+      // 추천 결과를 기존 OutfitData 형식으로 변환
+      const outfitRecommendation: OutfitData = {
+        top: recommendation.items.find(item => item.category === 'top')?.name || '상의 없음',
+        bottom: recommendation.items.find(item => item.category === 'bottom')?.name || '하의 없음',
+        outer: recommendation.items.find(item => item.category === 'outer')?.name || '겉옷 없음',
+        shoes: recommendation.items.find(item => item.category === 'shoes')?.name || '신발 없음',
+        accessories: recommendation.items.filter(item => item.category === 'accessory').map(item => item.name),
+        tip: recommendation.reason + (recommendation.trendScore ? ` (트렌드 지수: ${recommendation.trendScore}점)` : '')
+      };
+      
+      setOutfitData(outfitRecommendation);
+      
+      // 코디 히스토리에 추가
+      addCodiHistory(recommendation.items, situation);
+      
+      setIsLoading(false);
+      setShowRecommendation(true);
+    }, 1500);
+  };
+
   if (!user) {
     return <LoginForm />;
   }
@@ -239,7 +273,10 @@ const Index = () => {
           <div className="flex items-center justify-between mb-4">
             <Button
               variant="outline"
-              onClick={() => setShowWardrobe(!showWardrobe)}
+              onClick={() => {
+                setShowWardrobe(!showWardrobe);
+                setShowTrending(false);
+              }}
               className="flex items-center space-x-2"
             >
               <User className="w-4 h-4" />
@@ -261,11 +298,18 @@ const Index = () => {
           </div>
           
           <h1 className="text-3xl font-bold text-gray-800 mb-2">안녕하세요, {user.name}님!</h1>
-          <p className="text-gray-600">내 옷장 기반 맞춤 코디 추천</p>
+          <p className="text-gray-600">AI 기반 개인 맞춤 코디 추천</p>
         </div>
 
         {showWardrobe ? (
           <WardrobeManager />
+        ) : showTrending ? (
+          <TrendingOutfits />
+        ) : showSituationSelector ? (
+          <SituationSelector 
+            onSituationSelect={handleSituationRecommendation} 
+            isLoading={isLoading}
+          />
         ) : (
           <>
             {/* 지역 선택 */}
@@ -290,15 +334,29 @@ const Index = () => {
               </div>
             )}
 
-            {/* 메인 버튼 */}
+            {/* 메인 버튼들 */}
             {!showRecommendation && (
-              <div className="mb-8">
+              <div className="space-y-4 mb-8">
                 <button
                   onClick={handleGetRecommendation}
                   disabled={isLoading}
                   className="w-full bg-gradient-to-r from-orange-400 to-pink-400 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:transform-none"
                 >
-                  {isLoading ? `${selectedLocation} 날씨 확인 중...` : `🧥 ${selectedLocation} 맞춤 코디 추천받기`}
+                  {isLoading ? `${selectedLocation} 날씨 확인 중...` : `🧥 ${selectedLocation} 일반 추천`}
+                </button>
+                
+                <button
+                  onClick={() => setShowSituationSelector(true)}
+                  className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  🎯 상황별 맞춤 추천
+                </button>
+                
+                <button
+                  onClick={() => setShowTrending(true)}
+                  className="w-full bg-gradient-to-r from-indigo-400 to-purple-400 text-white font-semibold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                >
+                  🔥 요즘 트렌드 코디
                 </button>
               </div>
             )}
@@ -319,7 +377,10 @@ const Index = () => {
                 
                 {/* 다시 추천받기 버튼 */}
                 <button
-                  onClick={() => setShowRecommendation(false)}
+                  onClick={() => {
+                    setShowRecommendation(false);
+                    setShowSituationSelector(false);
+                  }}
                   className="w-full bg-white text-gray-700 font-medium py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 border border-gray-200"
                 >
                   🔄 다시 추천받기
@@ -332,6 +393,7 @@ const Index = () => {
         {/* 푸터 */}
         <div className="text-center mt-12 text-sm text-gray-500">
           <p>매일 아침 옷차림 고민 끝! 👔</p>
+          <p className="text-xs mt-1">개인 취향과 트렌드를 반영한 AI 추천</p>
         </div>
       </div>
     </div>
